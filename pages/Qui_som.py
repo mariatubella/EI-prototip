@@ -1,4 +1,8 @@
 import streamlit as st
+from PIL import Image
+
+logo = Image.open('Logo.png')
+st.sidebar.image(logo)
 
 st.sidebar.write("### Mail de contacte")
 st.sidebar.write("pad.ai@gmail.com")
