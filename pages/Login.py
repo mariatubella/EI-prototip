@@ -21,15 +21,17 @@ def main():
 
         alertes(zona)
 
-        utis = st.sidebar.selectbox("Serveis", ["","Mapa", "Historial", "Anàlisi", "Informes", "Compte"])
+        utis = st.sidebar.selectbox("Serveis", ["","Mapa", "Historial", "Anàlisi sanitari", "Anàlisi ambiental", "Informes", "Compte"])
         if utis == "Mapa":
             mapa(zona)
         elif utis == "Historial":
             historial(zona)
-        elif utis == "Anàlisi":
+        elif utis == "Anàlisi sanitari":
             analisi(zona)
         elif utis == "Informes":
             informes(zona)
+        elif utis == "Anàlisi ambiental":
+            analisi_ambiental(zona)
         elif utis == "Compte":
             compte(username, role)
     
@@ -65,7 +67,7 @@ def historial(zona):
 def analisi(zona):
     if zona == "Metropolitana Sud":
         poblacio = st.selectbox("Població", ["", "Argençola", "Bellprat", "el Bruc", "Cabrera d'Anoia", "Capellades", "Carme", 
-                                             "Castellolí", "els Hostalets de Pierola", "Igualada", "Masquefa", "Montmaneu",
+                                             "Castellolí", "El Prat de Llobregat", "els Hostalets de Pierola", "Igualada", "Masquefa", "Montmaneu",
                                                "Òdena", "Piera", "Santa Margarida de Montbui", "Vilanova del Camí", "Avinyonet del Penedès", 
                                                "Gelida", "Mediona", "Olèrdola", "Sant Pere de Riudebitlles", "..." ])
     elif zona == "Girona":
@@ -93,13 +95,64 @@ def analisi(zona):
         y='Consultes:Q',
         tooltip=['Dia:T', 'Consultes:Q']).properties(width=600,height=300, title=f"Consultes al Cap de {poblacio} el mes de {mes}")
 
-        chart
 
         chart2 = alt.Chart(data2).mark_arc(innerRadius=50).encode(
         theta="Consultes",
         color="Diagnòstic:N",).properties(title=f"Diagnòstics al Cap de {poblacio} el mes de {mes}")
 
-        chart2
+        chart | chart2
+    
+
+        municipi, municipi2 = st.columns(2)
+
+        with municipi:
+            st.write(f"## {poblacio}")
+            st.markdown("<span style='color:blue'>Dades extretes la pàgina web de l'ajuntament.</span>", unsafe_allow_html=True)
+            st.write("PROVÍNCIA: Barcelona")
+            st.write("COMARCA: El Baix Llobregat")
+            st.write("NOMBRE D'HABITANTS: 65.609  habitants (a 1 de gener de 2023, segons el padró d'habitants municipal)")
+            st.write("SUPERFÍCIE: 32,23 km2")
+            st.write("ALTITUD MÀXIMA: 5m (a la plaça de la vila)")
+
+            st.write("### Ciutats germanes")
+            st.write("Garrovillas de Alconétar (Cáceres), Gibara (Cuba), Kukra Hill (Nicaragua), Fingal (Irlanda)")
+
+        with municipi2:
+            st.write("### El clima")
+            st.write("El clima del Prat és el característic del domini marítim mediterrani, amb estius calorosos i hiverns temperats i relativament humits.")
+            st.write("TEMPERATURA MITJANA ANUAL: 15,6 ºC")
+            st.write("TEMPERATURA MITJANA ANUAL MÍNIMA: 11,3 ºC")
+            st.write("TEMPERATURA MITJANA ANUAL MÀXIMA: 19,8 ºC")
+            st.write("PRECIPITACIÓ MITJANA ANUAL: Al voltant dels 600mm, però amb oscil·lacions notables.")
+
+def analisi_ambiental(zona):
+    st.write(f"## Informació de les estacions de contaminació ambiental de la zona {zona}")
+    if zona == "Metropolitana Sud":
+        poblacio2 = st.selectbox("Població", ["", "Argençola", "Bellprat", "el Bruc", "Cabrera d'Anoia", "Capellades", "Carme", 
+                                             "Castellolí", "El Prat de Llobregat", "els Hostalets de Pierola", "Igualada", "Masquefa", "Montmaneu",
+                                               "Òdena", "Piera", "Santa Margarida de Montbui", "Vilanova del Camí", "Avinyonet del Penedès", 
+                                               "Gelida", "Mediona", "Olèrdola", "Sant Pere de Riudebitlles", "..." ])
+    elif zona == "Girona":
+        poblacio2 = st.selectbox("Població", ["", "Aiguaviva", "Anglès", "Begur", "Besalú", "la Bisbal d'Empordà", "Castelló d'Empúries", 
+                                             "Cassà de la Selva", "Figueres", "Llagostera", "Planoles", "Ribes de Freser",
+                                               "Ripoll", "Rupià", "Sant Feliu de Guíxols", "Santa Cristina d'Aro", "Sant Hilari Sacalm", 
+                                               "Sant Joan de les Abadesses", "Sant Llorenç de la Muga", " Sant Miquel de Campmajor", "Terrades", "..." ])
+    else:
+        st.markdown("<div style='background-color:pink; padding:10px; color:black; font-size:18px;'><b>No hi ha informació disponible de la teva zona</b></div>", unsafe_allow_html=True)
+
+
+    if poblacio2 != "":
+        col1, col2 = st.columns(2)
+        with col1:
+            st.write("NOM DE L'ESTACIÓ: El Prat de LLobregat - Sagnier, Barcelona")
+        with col2:    
+            st.write("UBICACIÓ DE L'ESTACIÓ: Complex Esportiu Municipal Sagnier. Carrer de Frederica Montseny, El Prat De Llobregat. 08820 Barcelona")
+
+
+        data = {"Nivell de contaminació de l'aire": ["Bo"], "Índex de qualitat de l'aire (IQA)": [17], "Contaminant principal": ["O3"]}
+        df_custom = pd.DataFrame(data)
+
+        st.table(df_custom)
 
 def informes(zona):
     st.write("## Informes estàtics")

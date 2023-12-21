@@ -7,8 +7,5 @@ def main():
     logo = Image.open('Logo.png')
     st.image(logo)
 
-    ics = Image.open('ics.jpg')
-    st.image(ics)
-
 if __name__ == "__main__":
     main()
